@@ -1,11 +1,11 @@
-import {mockWithVideo, mockWithImage} from '../../libs/camera-mock';
+import {mockWithVideo, mockWithImage} from '../../libs/camera-mock.js';
 const THREE = window.MINDAR.IMAGE.THREE;
 
 document.addEventListener('DOMContentLoaded', () => {
   const start = async() => {
 
-    //mockWithVideo('../../assets/mock-videos/course-banner1.mp4');
-    mockWithImage('../../assets/mock-videos/course-banner1.png');
+    mockWithVideo('../../assets/mock-videos/course-banner1.mp4');
+    //mockWithImage('../../assets/mock-videos/course-banner1.png');
 
     const mindarThree = new window.MINDAR.IMAGE.MindARThree({
       container: document.body,
