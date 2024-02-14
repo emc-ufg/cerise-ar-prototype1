@@ -1,1 +1,0 @@
-# cerise-ar-prototype1
