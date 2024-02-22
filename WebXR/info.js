@@ -90,11 +90,11 @@ function onSelect() {
     infograph.position.y+=1;
     infograph.position.x-=0.2;
     infograph.visible = true;   
-    infotext.position.setFromMatrixPosition(reticle.matrix);
-    infotext.quaternion.setFromRotationMatrix(reticle.matrix);
-    infotext.position.y+=1;
-    infotext.position.x+=0.2;
-    infotext.visible = true;            
+    // infotext.position.setFromMatrixPosition(reticle.matrix);
+    // infotext.quaternion.setFromRotationMatrix(reticle.matrix);
+    // infotext.position.y+=1;
+    // infotext.position.x+=0.2;
+    // infotext.visible = true;            
   }
 }
 
