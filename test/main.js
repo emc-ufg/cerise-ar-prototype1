@@ -1,15 +1,20 @@
 import * as THREE from 'three';
 import {MindARThree} from "mindar-image-three";
 import {GLTFLoader} from "GLTF";
+import {Html5Qrcode} from "html5-qrcode";
 
 document.addEventListener("DOMContentLoaded", () => {
     const start = async () => {
         const mindarThree = new MindARThree({
             container: document.body,
-            imageTargetSrc: "all.mind", //multiples.mind -> test 50+ anchors
+            imageTargetSrc: "hiro.mind",
         });
 
+        let server = "http://127.0.0.1:5000/"
+
         const {renderer, scene, camera} = mindarThree;
+
+        let back_index = null;
 
         var current_anchor = null; //current index for targeted anchor (will be aways 0 after remove other anchors)
 
@@ -44,13 +49,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
         //text
 
-        var textmsg = [];
-
-        textmsg.push('anchor0', 'anchor1');
-
         var txtloaded = null;
 
-        function addtxt(index) {
+        async function addtxt(index, string_) {
             const cv = document.createElement('canvas');
             const canvasWidth = window.innerWidth * 0.2;
             const canvasHeight = window.innerHeight * 0.1;
@@ -62,7 +63,7 @@ document.addEventListener("DOMContentLoaded", () => {
             ctx.fillStyle = '#129912';
             ctx.textAlign = 'left';
             ctx.textBaseline = 'middle';
-            const txtstring = textmsg[anchorIndex];
+            const txtstring = string_;
             const maxFontSize = 0.5*Math.min(canvasWidth, canvasHeight);
             let fontSize = maxFontSize;
             while (fontSize > 1) { //adjust fontsize till the text is all in canvas element
@@ -90,17 +91,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
         //3d models
 
-        var modelspath = [];
-
-        modelspath.push('applications/assets/models/musicband-bear/scene.gltf', 'applications/assets/models/musicband-raccoon/scene.gltf');
-
-        function add3dmodel(index){
+        async function add3dmodel(index, model_){
             const light = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 1);
             scene.add(light);
             const loader = new GLTFLoader();
             let anchornow = mindarThree.anchors[index];
-            loader.load(modelspath[anchorIndex], gltf =>{
-                gltf.scene.scale.set(0.1, 0.1, 0.1);
+            loader.load(model_, gltf =>{
+                gltf.scene.scale.set(1.5, 1.5, 1.5);
                 gltf.scene.position.set(0, -0.4, 0);
                 anchornow.group.add(gltf.scene);
             });
@@ -108,15 +105,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
         //images
 
-        var imagepaths = [];
-
-        imagepaths.push('applications/assets/targets/musicband-bear.png', 'applications/assets/targets/musicband-raccoon.png');
-
         var imageloaded = null;
 
-        function addimage(index){
+        async function addimage(index, image_){
             const imagetextureLoader = new THREE.TextureLoader();
-            imagetextureLoader.load(imagepaths[anchorIndex], (imagetexture) => {
+            imagetextureLoader.load(image_, (imagetexture) => {
                 const imagematerial = new THREE.MeshBasicMaterial({ map: imagetexture, transparent: true, opacity: 1 });
                 const imageRatio = imagetexture.image.width / imagetexture.image.height;
                 let imagegeometry;
@@ -152,7 +145,7 @@ document.addEventListener("DOMContentLoaded", () => {
         closetextureLoader.load("close2.png", (closetexture) => {
             let imageratio = closetexture.image.width / closetexture.image.height;
             const closegeometry = new THREE.PlaneGeometry(buttonheight * imageratio, buttonheight);
-            const closematerial = new THREE.MeshBasicMaterial({ map: closetexture, transparent: true, opacity: 1 });
+            const closematerial = new THREE.MeshBasicMaterial({ map: closetexture, transparent: true, opacity: 0.5 });
             const closeplane = new THREE.Mesh(closegeometry, closematerial);
             close = new THREE.Group();
             close.add(closeplane);
@@ -171,7 +164,7 @@ document.addEventListener("DOMContentLoaded", () => {
         let buttonright;
         const rightbuttontextureLoader = new THREE.TextureLoader();
         rightbuttontextureLoader.load("arrow.png", (rightbuttontexture) => {
-            const rightbuttonmaterial = new THREE.MeshBasicMaterial({ map: rightbuttontexture, transparent: true, opacity: 1 });
+            const rightbuttonmaterial = new THREE.MeshBasicMaterial({ map: rightbuttontexture, transparent: true, opacity: 0.5 });
             const rightbuttonplane = new THREE.Mesh(buttongeometry, rightbuttonmaterial);
             buttonright = new THREE.Group();
             buttonright.add(rightbuttonplane);
@@ -179,7 +172,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 buttonright.position.set((interactionelementsLimits.width - buttonwidth), (buttonheight - interactionelementsLimits.height), interationelementsZ);
             }
             else{
-                buttonright.position.set((interactionelementsLimits.width - buttonwidth), (-interactionelementsLimits.height+buttonheight/2), interationelementsZ);
+                buttonright.position.set((interactionelementsLimits.width - buttonwidth), (-interactionelementsLimits.height+4*buttonheight/2), interationelementsZ);
             }
             buttonright.rotation.set(0, 0, 0);
             buttonright.userData.clickable = true;
@@ -188,7 +181,7 @@ document.addEventListener("DOMContentLoaded", () => {
         let buttonleft;
         const leftbuttontextureLoader = new THREE.TextureLoader();
         leftbuttontextureLoader.load("arrowleft.png", (leftbuttontexture) => {
-            const leftbuttonmaterial = new THREE.MeshBasicMaterial({ map: leftbuttontexture, transparent: true, opacity: 1 });
+            const leftbuttonmaterial = new THREE.MeshBasicMaterial({ map: leftbuttontexture, transparent: true, opacity: 0.5 });
             const leftbuttonplane = new THREE.Mesh(buttongeometry, leftbuttonmaterial);
             buttonleft = new THREE.Group();
             buttonleft.add(leftbuttonplane);
@@ -196,7 +189,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 buttonleft.position.set((-interactionelementsLimits.width + buttonwidth), (buttonheight - interactionelementsLimits.height), interationelementsZ);
             }
             else{
-                buttonleft.position.set((-interactionelementsLimits.width + buttonwidth), (-interactionelementsLimits.height+buttonheight/2), interationelementsZ);
+                buttonleft.position.set((-interactionelementsLimits.width + buttonwidth), (-interactionelementsLimits.height+4*buttonheight/2), interationelementsZ);
             }
             buttonleft.rotation.set(0, 0, 0);
             buttonleft.userData.clickable = true;
@@ -228,7 +221,7 @@ document.addEventListener("DOMContentLoaded", () => {
             return new Promise((resolve) => {
                 removeallAnchors();
                 const anchor0 = mindarThree.addAnchor(0);
-                const anchor1 = mindarThree.addAnchor(1);
+                //pode adicionar quantas ancoras quiser, principalmente se quiser distinguir selos
                 mindarThree.anchors.forEach((anchor) => {
                     anchor.onTargetFound = () => {
                         handleTargetFound(anchor);
@@ -259,19 +252,41 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         };
 
-        function handleTargetFound(anchor) {
+        let in_loop = 0;
+
+        function Targeted(anchor){
             if(!lockIndex){
-                anchorIndex = mindarThree.anchors.indexOf(anchor);
-                addtxt(anchorIndex);
-                remove_other_anchors(anchorIndex);
-                mode = 0;
-                opennavigationInterface();
-                current_anchor = 0;
-                lockIndex = true;
+                scanQRCode().then((qrCodeMessage) => {
+                    back_index = qrCodeMessage;
+                    anchorIndex = mindarThree.anchors.indexOf(anchor);
+                    addTextFromBackend(anchorIndex, back_index);
+                    addnamefrombackend(back_index);
+                    if(mindarThree.anchors.length > 1){
+                        remove_other_anchors(anchorIndex);
+                    }
+                    mode = 0;
+                    opennavigationInterface();
+                    current_anchor = 0;
+                    lockIndex = true;
+                })
+                .catch((error) => {
+                    console.error('Error scanning QR code:', error);
+                    if(in_loop){
+                        setTimeout(() => {
+                            Targeted(anchor);
+                        }, 200);
+                    }
+                });
             }
+        }
+
+        function handleTargetFound(anchor) {
+            in_loop = 1;
+            Targeted(anchor)
         };
         
         async function handleTargetLost() {
+            in_loop = 0;
         };
 
         async function closeHandler() {
@@ -280,6 +295,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             closenavigationInterface();
             current_anchor = null;
+            targetName('');
             await addallAnchors();
         };
 
@@ -288,15 +304,15 @@ document.addEventListener("DOMContentLoaded", () => {
                 let index = current_anchor;
                 if (mode === 0){
                     removeAllObjectsFromGroup(mindarThree.anchors[index].group);
-                    addimage(index);
+                    addImageFromBackend(index, back_index);
                 }
                 else if (mode === 1){
                     removeAllObjectsFromGroup(mindarThree.anchors[index].group);
-                    add3dmodel(index);
+                    addModelFromBackend(index, back_index);
                 }
                 else if (mode === 2){
                     removeAllObjectsFromGroup(mindarThree.anchors[index].group);
-                    addtxt(index);
+                    addTextFromBackend(index, back_index);
                 }
                 if (mode<2){
                     mode = mode + 1;
@@ -312,15 +328,15 @@ document.addEventListener("DOMContentLoaded", () => {
                 let index = current_anchor;
                 if (mode === 0){
                     removeAllObjectsFromGroup(mindarThree.anchors[index].group);
-                    add3dmodel(index);
+                    addModelFromBackend(index, back_index);
                 }
                 else if (mode === 1){
                     removeAllObjectsFromGroup(mindarThree.anchors[index].group);
-                    addtxt(index);
+                    addTextFromBackend(index, back_index);
                 }
                 else if (mode === 2){
                     removeAllObjectsFromGroup(mindarThree.anchors[index].group);
-                    addimage(index);
+                    addImageFromBackend(index, back_index);
                 }
                 if (mode>0){
                     mode = mode - 1;
@@ -332,8 +348,6 @@ document.addEventListener("DOMContentLoaded", () => {
         };
 
         addallAnchors();
-
-        //user interaction
 
         document.body.addEventListener("click", (e)=>{
             e.preventDefault();
@@ -400,6 +414,122 @@ document.addEventListener("DOMContentLoaded", () => {
 
         updateFPSCounter();
 
+        var objectName = document.createElement('div');
+        objectName.style.position = 'absolute';
+        objectName.style.top = '50px';
+        objectName.style.left = '10px';
+        objectName.style.color = '#ffffff';
+        document.body.appendChild(objectName);
+
+        function targetName(name) {
+            objectName.innerHTML = name;
+        }
+
+        async function captureFrame() {
+            return new Promise((resolve) => {
+                const video = document.querySelector("video");
+                const canvas = document.createElement("canvas");
+                video.pause();
+                const style = window.getComputedStyle(video),
+                width = parseFloat(style.getPropertyValue('width')),
+                height = parseFloat(style.getPropertyValue('height')),
+                top = parseFloat(style.getPropertyValue('top')),
+                left = parseFloat(style.getPropertyValue('left'));
+                const imgLeft = left * video.videoWidth / width
+                const imgTop = top * video.videoHeight / height
+                const drawLeft = imgLeft > 0 ? 0 : imgLeft
+                const drawTop = imgTop > 0 ? 0 : imgTop
+                const drawWidth = video.videoWidth
+                const drawHeight = video.videoHeight
+                canvas.width = video.videoWidth + imgLeft * 2
+                canvas.height = video.videoHeight + imgTop * 2
+                canvas.getContext('2d').drawImage(video, drawLeft, drawTop, drawWidth, drawHeight);
+                video.play();
+                resolve(canvas);
+            });
+        }
+
+        async function scanQRCode() {
+            try {
+                const img_screen = await captureFrame();
+                const blob = await new Promise(resolve => img_screen.toBlob(resolve));
+                const file = new File([blob], "qr-code-image.png");
+                const html5QrCode = new Html5Qrcode('qr-code-reader');
+                const qrCodeMessage = await html5QrCode.scanFile(file, false);
+                return qrCodeMessage;
+            } catch (error) {
+                console.error(`Error scanning QR code: ${error}`);
+                throw error;
+            }
+        }
+
+        // Função para adicionar imagem do backend
+        async function addImageFromBackend(anchorIndex, index) {
+            try {
+                const response = await fetch(server + `equipamentos/${index}/arquivos/imagem`, {
+                    method: 'GET',
+                    mode: 'no-cors'
+                });
+                if (!response.ok) {
+                    throw new Error('Failed to fetch image from backend');
+                }
+                const imageUrl = await response.json();
+                await addimage(anchorIndex, imageUrl);
+            } catch (error) {
+                console.error('Error adding image from backend:', error);
+            }
+        }
+
+        // Função para adicionar modelo 3D do backend
+        async function addModelFromBackend(anchorIndex, index) {
+            try {
+                const response = await fetch(server + `equipamentos/${index}/arquivos/modelo3d`, {
+                    method: 'GET',
+                    mode: 'no-cors'
+                });
+                if (!response.ok) {
+                    throw new Error('Failed to fetch model from backend');
+                }
+                const modelUrl = await response.json();
+                await add3dmodel(anchorIndex, modelUrl);
+            } catch (error) {
+                console.error('Error adding model from backend:', error);
+            }
+        }
+
+        // Função para adicionar texto do backend
+        async function addTextFromBackend(anchorIndex, index) {
+            try {
+                const response = await fetch(server + `equipamentos/${index}`, {
+                    method: 'GET',
+                    mode: 'no-cors'
+                });
+                if (!response.ok) {
+                    throw new Error('Failed to fetch text from backend');
+                }
+                const text = await response.text();
+                await addtxt(anchorIndex, text.Descricao);
+            } catch (error) {
+                console.error('Error adding text from backend:', error);
+            }
+        }
+
+        async function addnamefrombackend(index) {
+            try {
+                const response = await fetch(server + `equipamentos/${index}`, {
+                    method: 'GET',
+                    mode: 'no-cors'
+                });
+                if (!response.ok) {
+                    throw new Error('Failed to fetch text from backend');
+                }
+                const text = await response.text();
+                targetName(text.Nome);
+            } catch (error) {
+                console.error('Error adding text from backend:', error);
+            }
+        }
+        
         //start
         
         await mindarThree.start();
@@ -409,4 +539,5 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
     start();
+
 });
