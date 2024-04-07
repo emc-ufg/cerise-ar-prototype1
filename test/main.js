@@ -91,12 +91,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
         //3d models
 
-        async function add3dmodel(index, model_){
+        async function add3dmodel(index, modelData){
             const light = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 1);
             scene.add(light);
             const loader = new GLTFLoader();
             let anchornow = mindarThree.anchors[index];
-            loader.load(model_, gltf =>{
+            loader.load(URL.createObjectURL(new Blob([modelData])), gltf =>{
                 gltf.scene.scale.set(1.5, 1.5, 1.5);
                 gltf.scene.position.set(0, -0.4, 0);
                 anchornow.group.add(gltf.scene);
@@ -464,16 +464,15 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         // Função para adicionar imagem do backend
+
         async function addImageFromBackend(anchorIndex, index) {
             try {
-                const response = await fetch(server + `equipamentos/${index}/arquivos/imagem`, {
-                    method: 'GET',
-                    mode: 'no-cors'
-                });
+                const response = await fetch(server + `equipamentos/${index}/arquivos/imagem`);
                 if (!response.ok) {
                     throw new Error('Failed to fetch image from backend');
                 }
-                const imageUrl = await response.json();
+                const blob = await response.blob();
+                const imageUrl = URL.createObjectURL(blob);
                 await addimage(anchorIndex, imageUrl);
             } catch (error) {
                 console.error('Error adding image from backend:', error);
@@ -483,15 +482,12 @@ document.addEventListener("DOMContentLoaded", () => {
         // Função para adicionar modelo 3D do backend
         async function addModelFromBackend(anchorIndex, index) {
             try {
-                const response = await fetch(server + `equipamentos/${index}/arquivos/modelo3d`, {
-                    method: 'GET',
-                    mode: 'no-cors'
-                });
+                const response = await fetch(server + `equipamentos/${index}/arquivos/modelo3d`);
                 if (!response.ok) {
                     throw new Error('Failed to fetch model from backend');
                 }
-                const modelUrl = await response.json();
-                await add3dmodel(anchorIndex, modelUrl);
+                const modelData = await response.arrayBuffer();
+                await add3dmodel(anchorIndex, modelData);
             } catch (error) {
                 console.error('Error adding model from backend:', error);
             }
@@ -500,10 +496,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // Função para adicionar texto do backend
         async function addTextFromBackend(anchorIndex, index) {
             try {
-                const response = await fetch(server + `equipamentos/${index}`, {
-                    method: 'GET',
-                    mode: 'no-cors'
-                });
+                const response = await fetch(server + `equipamentos/${index}`);
                 if (!response.ok) {
                     throw new Error('Failed to fetch text from backend');
                 }
@@ -516,10 +509,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         async function addnamefrombackend(index) {
             try {
-                const response = await fetch(server + `equipamentos/${index}`, {
-                    method: 'GET',
-                    mode: 'no-cors'
-                });
+                const response = await fetch(server + `equipamentos/${index}`);
                 if (!response.ok) {
                     throw new Error('Failed to fetch text from backend');
                 }
