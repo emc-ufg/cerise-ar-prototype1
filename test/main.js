@@ -47,6 +47,10 @@ document.addEventListener("DOMContentLoaded", () => {
             return { width: screeninUse*width, height: screeninUse*height };
         };
 
+        var interationelementsZ = -12; //-10 already above the camera image
+        var interactionelementsDistance = camera.position.z - interationelementsZ;
+        var interactionelementsLimits = getobjectLimits(interactionelementsDistance);
+
         //text
 
         var txtloaded = null;
@@ -76,7 +80,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             ctx.font = `bold ${fontSize}px Arial`;
             ctx.fillText(txtstring, 0, 0.5 * cv.height);
-            const txtGeometry = new THREE.BoxGeometry(2.4, 0.8, 0.1);
+            const txtGeometry = new THREE.BoxGeometry(1.2, 0.4, 0.05);
             const cvTexture = new THREE.Texture(cv);
             cvTexture.needsUpdate = true;
             const spineMat = new THREE.MeshPhongMaterial({ color: 0xa5800e });
@@ -126,10 +130,6 @@ document.addEventListener("DOMContentLoaded", () => {
         };
 
         //adding interaction elements
-
-        var interationelementsZ = -12; //-10 already above the camera image
-        var interactionelementsDistance = camera.position.z - interationelementsZ;
-        var interactionelementsLimits = getobjectLimits(interactionelementsDistance);
 
         if(aspectratio>=1){
             var buttonwidth = 0.2*interactionelementsLimits.width;
@@ -500,8 +500,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (!response.ok) {
                     throw new Error('Failed to fetch text from backend');
                 }
-                const text = await response.text();
-                await addtxt(anchorIndex, text.Descricao);
+                const text = await response.json();
+                await addtxt(anchorIndex, String(text.Descricao));
             } catch (error) {
                 console.error('Error adding text from backend:', error);
             }
@@ -513,7 +513,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (!response.ok) {
                     throw new Error('Failed to fetch text from backend');
                 }
-                const text = await response.text();
+                const text = await response.json();
                 targetName(text.Nome);
             } catch (error) {
                 console.error('Error adding text from backend:', error);
