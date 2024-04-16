@@ -25,7 +25,7 @@ equipamento, cujo caminho é armazenado junto ao registro do equipamento.
 
 **2. Listagem de Equipamentos (‘/equipamentos’):**
 * **Método: GET**
-* Resposta: Uma lista em JSON de todos os equipamentos registrados na base
+* **Resposta:** Uma lista em JSON de todos os equipamentos registrados na base
 de dados. Cada item na lista contém o ID e o nome do equipamento.
 
 **3. Obtenção de Detalhes de Equipamento (‘/equipamentos/<id>’):**
