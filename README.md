@@ -4,10 +4,10 @@ Esta API foi desenvolvida para facilitar o gerenciamento de equipamentos, inclui
 inserção, listagem, obtenção de detalhes, atualização e exclusão de equipamentos, além do
 gerenciamento de arquivos associados como imagens, modelos 3D e QR codes.
 
-## Data:
+#### Data:
 [Images](https://drive.google.com/drive/folders/1RI561DtfMuxoE9ARRBbnHiNUJ4s0cxti?usp=sharing), [Strings](https://drive.google.com/drive/folders/1RI561DtfMuxoE9ARRBbnHiNUJ4s0cxti?usp=sharing), [3D Object](https://drive.google.com/drive/folders/1egfNI7pnUejouX9hE1qF6VAvNgENSjxh?usp=sharing)
 
-## Como usar a API:
+#### Como usar a API:
 1. Inserção de Equipamento (‘/equipamentos’):
 ● Método: POST
 ● Corpo da Solicitação: Inclua os dados do equipamento no corpo da solicitação
