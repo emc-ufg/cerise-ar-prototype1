@@ -11,7 +11,7 @@ gerenciamento de arquivos associados como imagens, modelos 3D e QR codes.
 * Método: POST
 * Corpo da Solicitação: Inclua os dados do equipamento no corpo da solicitação
 em formato “multipart/form-data”. Os campos obrigatórios e opcionais são:
-** ‘nome’ (obrigatório): Nome do equipamento.
+  * ‘nome’ (obrigatório): Nome do equipamento.
 ** ‘descricao’ (opcional): Descrição detalhada do equipamento.
   ○ ‘confiabilidade’ (opcional): Nível de confiabilidade do equipamento.
   ○ ‘imagem’ (opcional): Arquivo de imagem do equipamento. Deve ser um
