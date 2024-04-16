@@ -30,14 +30,14 @@ de dados. Cada item na lista contém o ID e o nome do equipamento.
 
 **3. Obtenção de Detalhes de Equipamento (‘/equipamentos/<id>’):**
 * **Método: GET**
-* **URL:** Substitua ***‘<id>’*** pelo ID do equipamento desejado.
+* **URL:** Substitua ***‘ <id> ’*** pelo ID do equipamento desejado.
 * **Resposta:** Detalhes completos do equipamento solicitado em JSON, incluindo
 nome, descrição, confiabilidade e caminhos para os arquivos associados
 (imagem, modelo 3D e QR code).
 
 **4. Atualização de Equipamento (‘/equipamentos/<id>’):**
 * **Método: PUT**
-* **URL:** Substitua ***‘<id>’*** pelo ID do equipamento que você deseja atualizar.
+* **URL:** Substitua ***‘ <id> ’*** pelo ID do equipamento que você deseja atualizar.
 * **Corpo da Solicitação:** Similar à inserção, mas você pode incluir novos arquivos
 para substituir os existentes.
 * **Resposta:** Uma mensagem em JSON confirmando a atualização bem-sucedida
@@ -45,13 +45,13 @@ do equipamento.
 
 **5. Exclusão de Equipamento (‘/equipamentos/<id>’):**
 * **Método: DELETE**
-* **URL:** Substitua ***‘<id>’*** pelo ID do equipamento que você deseja excluir.
+* **URL:** Substitua ***‘ <id> ’*** pelo ID do equipamento que você deseja excluir.
 * **Resposta:** Confirmação da exclusão do equipamento e a remoção de todos os
 arquivos associados.
 
 **6. Acesso a Arquivos Associados (‘/equipamentos/<id>/arquivos/<tipo>’):**
 * **Método: GET**
-* **URL:** Substitua ***‘<id>’*** pelo ID do equipamento e ‘<tipo>’ pelo tipo de arquivo
+* **URL:** Substitua ***‘ <id> ’*** pelo ID do equipamento e ‘<tipo>’ pelo tipo de arquivo
 desejado (‘imagem’, ‘modelo3d’, ‘qrcode’).
 * **Resposta:** O arquivo solicitado é servido para download ou visualização,
 dependendo do tipo e das configurações do navegador.
