@@ -51,7 +51,7 @@ arquivos associados.
 
 **6. Acesso a Arquivos Associados (‘/equipamentos/<id>/arquivos/<tipo>’):**
 * **Método: GET**
-* **URL:** Substitua ***‘id’*** pelo ID do equipamento e ‘<tipo>’ pelo tipo de arquivo
+* **URL:** Substitua ***‘id’*** pelo ID do equipamento e ‘tipo’ pelo tipo de arquivo
 desejado (‘imagem’, ‘modelo3d’, ‘qrcode’).
 * **Resposta:** O arquivo solicitado é servido para download ou visualização,
 dependendo do tipo e das configurações do navegador.
