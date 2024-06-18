@@ -4,7 +4,8 @@ Esta API foi desenvolvida para facilitar o gerenciamento de equipamentos, inclui
 inserção, listagem, obtenção de detalhes, atualização e exclusão de equipamentos, além do
 gerenciamento de arquivos associados como imagens, modelos 3D e QR codes.
 
-#### Data: [Images](https://drive.google.com/drive/folders/1RI561DtfMuxoE9ARRBbnHiNUJ4s0cxti?usp=sharing), [Strings](https://drive.google.com/drive/folders/1RI561DtfMuxoE9ARRBbnHiNUJ4s0cxti?usp=sharing), [3D Object](https://drive.google.com/drive/folders/1egfNI7pnUejouX9hE1qF6VAvNgENSjxh?usp=sharing)
+#### Data: [imagens, strings, objetos 3D](https://github.com/emc-ufg/cerise-ar-prototype1/blob/main/test/Arquivos%20Backend%20Proto%CC%81tipo%20AR%20CERISE.pdf)
+#### Porta: 443 (HTTPS)
 
 #### Como usar a API:
 **1. Inserção de Equipamento (‘/equipamentos’):**
