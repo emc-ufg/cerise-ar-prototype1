@@ -4,7 +4,7 @@ Esta API foi desenvolvida para facilitar o gerenciamento de equipamentos, inclui
 inserção, listagem, obtenção de detalhes, atualização e exclusão de equipamentos, além do
 gerenciamento de arquivos associados como imagens, modelos 3D e QR codes.
 
-**Dados:** detalhamento a seguir
+**Dados:** verificar o tópico "Arquivos" a seguir
 
 **Porta:** 443 (HTTPS)
 
@@ -61,7 +61,7 @@ desejado (‘imagem’, ‘modelo3d’, ‘qrcode’).
 dependendo do tipo e das configurações do navegador.
 
 
-### Arquivos backend
+### Arquivos
 **Equipamento:**
 * **Nome:** Impressora 3D
 * **Descrição:** Impressora capaz de criar objetos tridimensionais a partir de um modelo digital.
