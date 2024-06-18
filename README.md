@@ -8,7 +8,7 @@ gerenciamento de arquivos associados como imagens, modelos 3D e QR codes.
 
 **Porta:** 443 (HTTPS)
 
-Para verificar se a API está em execução, digite na URL do navegador: **https://<IP do servidor>:porta**
+Para verificar se a API está em execução, digite na URL do navegador: **https://'IP do servidor':porta**
 
 #### Como usar a API:
 **1. Inserção de Equipamento (‘/equipamentos’):**
