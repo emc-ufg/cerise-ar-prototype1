@@ -10,7 +10,7 @@ gerenciamento de arquivos associados como imagens, modelos 3D e QR codes.
 
 Para verificar se a API está em execução, digite na URL do navegador: **https://*'IP do servidor'*:porta**
 
-#### Como usar a API:
+### Como usar a API:
 **1. Inserção de Equipamento (‘/equipamentos’):**
 * **Método: POST**
 * **Corpo da Solicitação:** Inclua os dados do equipamento no corpo da solicitação
@@ -61,7 +61,7 @@ desejado (‘imagem’, ‘modelo3d’, ‘qrcode’).
 dependendo do tipo e das configurações do navegador.
 
 
-#### Arquivos backend
+### Arquivos backend
 **Equipamento:**
 * **Nome:** Impressora 3D
 * **Descrição:** Impressora capaz de criar objetos tridimensionais a partir de um modelo digital.
