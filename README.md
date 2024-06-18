@@ -4,8 +4,8 @@ Esta API foi desenvolvida para facilitar o gerenciamento de equipamentos, inclui
 inserção, listagem, obtenção de detalhes, atualização e exclusão de equipamentos, além do
 gerenciamento de arquivos associados como imagens, modelos 3D e QR codes.
 
-#### Data: detalhamento a seguir
-#### Porta: 443 (HTTPS)
+**Dados:** detalhamento a seguir
+**Porta:** 443 (HTTPS)
 
 #### Como usar a API:
 **1. Inserção de Equipamento (‘/equipamentos’):**
