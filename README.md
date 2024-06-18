@@ -4,7 +4,7 @@ Esta API foi desenvolvida para facilitar o gerenciamento de equipamentos, inclui
 inserção, listagem, obtenção de detalhes, atualização e exclusão de equipamentos, além do
 gerenciamento de arquivos associados como imagens, modelos 3D e QR codes.
 
-#### Data: [imagens, strings, objetos 3D](https://github.com/emc-ufg/cerise-ar-prototype1/blob/main/test/Arquivos%20Backend%20Proto%CC%81tipo%20AR%20CERISE.pdf)
+#### Data: detalhamento a seguir
 #### Porta: 443 (HTTPS)
 
 #### Como usar a API:
@@ -56,3 +56,36 @@ arquivos associados.
 desejado (‘imagem’, ‘modelo3d’, ‘qrcode’).
 * **Resposta:** O arquivo solicitado é servido para download ou visualização,
 dependendo do tipo e das configurações do navegador.
+
+
+#### Arquivos backend
+
+#### Nome: Impressora 3D
+#### Descrição: Impressora capaz de criar objetos tridimensionais a partir de um modelo digital.
+#### Confiabilidade: 8/10
+#### Imagem: [HEVO-2.PNG](https://github.com/emc-ufg/cerise-ar-prototype1/blob/main/test/HEVO-2.PNG)
+#### Objeto 3D: [hevo30 v60.gltf](https://github.com/emc-ufg/cerise-ar-prototype1/blob/main/test/hevo30%20v60.gltf)
+
+#### Nome: Bateria Makita
+#### Descrição: Fonte de energia recarregável de alta eficiência, projetada para ferramentas elétricas sem fio.
+#### Confiabilidade: 9.2/10
+#### Imagem: [makita battery_1.JPG](https://github.com/emc-ufg/cerise-ar-prototype1/blob/main/test/makita%20battery_1.JPG)
+#### Objeto 3D: [makita battery.gltf](https://github.com/emc-ufg/cerise-ar-prototype1/blob/main/test/makita%20battery.gltf)
+
+#### Nome: Polia de velocidade variável
+#### Descrição: Permite ajustar a velocidade de rotação de um eixo motorizado.
+#### Confiabilidade: 9/10
+#### Imagem: [Variable Speed Pulley 2.jpg](https://github.com/emc-ufg/cerise-ar-prototype1/blob/main/test/Variable%20Speed%20Pulley%202.jpg)
+#### Objeto 3D: [variable speed pulley.gltf](https://github.com/emc-ufg/cerise-ar-prototype1/blob/main/test/variable%20speed%20pulley.gltf)
+
+#### Nome: Guindaste de ponte
+#### Descrição: Equipamento de elevação industrial capaz de levantar até 15 toneladas.
+#### Confiabilidade: 8.7/10
+#### Imagem: [Crane 15 Tons H11, 2M - Rendering.30.png](https://github.com/emc-ufg/cerise-ar-prototype1/blob/main/test/Crane%2015%20Tons%20H11%2C%202M%20-%20Rendering.30.png)
+#### Objeto 3D: [Crane 15 Tons H11 2M.gltf](https://github.com/emc-ufg/cerise-ar-prototype1/blob/main/test/Crane%2015%20Tons%20H11%202M.gltf)
+
+#### Nome: Hotend
+#### Descrição: Componente de impressora 3D de alta performance que oferece extrusão precisa e eficiente de filamentos.
+#### Confiabilidade: 7/10
+#### Imagem: [E3Neo_Hotend_v1.jpg](https://github.com/emc-ufg/cerise-ar-prototype1/blob/main/test/E3Neo_Hotend_v1.jpg)
+#### Objeto 3D: [e3neo_hotend_v1.gltf](https://github.com/emc-ufg/cerise-ar-prototype1/blob/main/test/e3neo_hotend_v1.gltf)
