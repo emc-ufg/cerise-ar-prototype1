@@ -5,7 +5,10 @@ inserção, listagem, obtenção de detalhes, atualização e exclusão de equip
 gerenciamento de arquivos associados como imagens, modelos 3D e QR codes.
 
 **Dados:** detalhamento a seguir
+
 **Porta:** 443 (HTTPS)
+
+Para verificar se a API está em execução: digite na URL: https://<IP do servidor>:porta
 
 #### Como usar a API:
 **1. Inserção de Equipamento (‘/equipamentos’):**
