@@ -29,7 +29,7 @@ git clone  `URL`
 ```
 
 3. **Acesse o diretório do repositório clonado**:
-Supondo a URL: https://github.com/usuario/nome-do-repositorio.git, digite:
+Supondo a URL: `https://github.com/usuario/nome-do-repositorio.git`, digite:
 ```
 cd nome-do-repositorio
 ```
@@ -87,7 +87,7 @@ Inicie os serviços definidos no `docker-compose.yml` com o comando:
 docker-compose up
 ```
 
-O aplicativo estará acessível em https://<IPpublico>:443.
+O aplicativo estará acessível em `https://<IPpublico>:443`.
 
 <a name="teste_api"></a>
 ## Teste a API
