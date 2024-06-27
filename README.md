@@ -42,8 +42,8 @@ Esta aplicação inclui os seguintes arquivos e diretórios:
 1. **`Dockerfile`**: Para construir a imagem contêiner Docker do aplicativo Flask.
 2. **`docker-compose.yml`**: Para orquestrar o serviço Flask e o serviço PostgreSQL.
 3. **`app.py`**: Um exemplo de aplicativo Flask simples.
-4. **`Certificados HTTPS`**
-5. **`Script de Backup`**
+4. **`Certificados HTTPS`**: Para fazer o redirecionamento HTTP para HTTPS.
+5. **`Script de Backup`**: Para automatizar o processo de backup dos dados.
 
 <a name="teoria_estrutura"></a>
 ## Explicação teórica da estrutura da aplicação
