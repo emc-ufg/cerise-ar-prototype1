@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
+    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    <style>
+        body{
+            margin: 0;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            color: #000;
+        }
+        #fpsCounter, #objectName {
+            position: absolute;
+            color: #ffffff;
+        }
+        #fpsCounter {
+            top: 10px;
+            left: 10px;
+        }
+        #objectName {
+            top: 50px;
+            left: 10px;
+        }
+        @media (orientation: landscape) {
+            .controls-container {
+                position: absolute;
+                left: 1vw;
+                bottom: 2vh;
+                width: 98vw;
+                display: flex;
+                justify-content: space-between;
+                pointer-events: none;
+            }
+            .controls {
+                display: flex;
+                justify-content: space-around;
+                background-color: rgba(0, 0, 0, 0.7);
+                padding: 1vw 2vw;
+                border-radius: 1vw;
+                pointer-events: auto;
+            }
+            .control-button, .toggle-button{
+                width: 6vw;
+                height: 6vw;
+                background-color: #ffdd00;
+                border: none;
+                color: rgb(0, 0, 0);
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin: 0 1vw;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+                pointer-events: auto;
+                font-size: 3vw;
+            }
+                .control-button:hover, .toggle-button:hover{
+                background-color: #ffdd00;
+            }
+            .toggle-button {
+                width: 4vw;
+                height: 4vw;
+                background-color: #ffdd00;
+                border: none;
+                color: rgb(0, 0, 0);
+                border-radius: 0.5vw;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+                pointer-events: auto;
+                position: absolute;
+                bottom: 2vh;
+                left: 50vw;
+                transform: translateX(-50%);
+                font-size: 2vw;
+            }
+            .left-arrow::before {
+                content: "←";
+            }
+            .check::before {
+                content: "✓";
+            }
+            .refresh::before {
+                content: "⟳";
+            }
+            .right-arrow::before {
+                content: "→";
+            }
+        }
+        @media (orientation: portrait) {
+            .controls-container {
+                position: absolute;
+                left: 1vw;
+                bottom: 2vh;
+                width: 98vw;
+                display: flex;
+                justify-content: space-between;
+                pointer-events: none;
+            }
+            .controls {
+                display: flex;
+                justify-content: space-around;
+                background-color: rgba(0, 0, 0, 0.7);
+                padding: 1vw 2vw;
+                border-radius: 1vw;
+                pointer-events: auto;
+            }
+            .control-button, .toggle-button{
+                width: 6vw;
+                height: 6vw;
+                background-color: #ffdd00;
+                border: none;
+                color: rgb(0, 0, 0);
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin: 0 1vw;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+                pointer-events: auto;
+                font-size: 3vw;
+            }
+                .control-button:hover, .toggle-button:hover{
+                background-color: #ffdd00;
+            }
+            .toggle-button {
+                width: 4vw;
+                height: 4vw;
+                background-color: #ffdd00;
+                border: none;
+                color: rgb(0, 0, 0);
+                border-radius: 0.5vw;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+                pointer-events: auto;
+                position: absolute;
+                bottom: 2vh;
+                left: 50vw;
+                transform: translateX(-50%);
+                font-size: 2vw;
+            }
+            .left-arrow::before {
+                content: "←";
+            }
+            .check::before {
+                content: "✓";
+            }
+            .refresh::before {
+                content: "⟳";
+            }
+            .right-arrow::before {
+                content: "→";
+            }
+        }
+    </style>
+  </head>
+  <body>
+    <a-scene embedded arjs="sourceType: webcam;">
+        <a-marker preset="hiro">
+        <a-entity id="model-3d" position="0 0 0"></a-entity>
+        <a-entity id="text-label" position="0 0 0"></a-entity>
+        <a-entity id="image" position="0 0 0"></a-entity>
+      </a-marker>
+      <a-entity camera></a-entity>
+    </a-scene>
+  </body>
+  <body>
+    <div id="fpsCounter"></div>
+    <div id="objectName"></div>
+    <div id="qr-code-reader" width="600px"></div>
+    <div class="controls-container">
+        <div class="controls controls-left">
+            <button class="control-button left-arrow"></button>
+            <button class="control-button check"></button>
+        </div>
+        <div class="controls controls-right">
+            <button class="control-button refresh"></button>
+            <button class="control-button right-arrow"></button>
+        </div>
+    </div>
+    <button class="toggle-button togglebutton">⋮</button>
+  </body>
+  <body>
+    <script>
+
+        const server = "http://200.137.220.38:5000/";
+
+        let currentMode = 0;
+        let backIndex = null;
+        let lockIndex = false;
+        let target_visible = 0;
+
+        var fpsCounter = document.getElementById('fpsCounter');
+        var objectName = document.getElementById('objectName');
+        var modelEntity = document.querySelector("#model-3d");
+        var textEntity = document.querySelector("#text-label");
+        var imageEntity = document.querySelector("#image");
+        const buttonLeft = document.querySelector('.left-arrow');
+        const buttonRight = document.querySelector('.right-arrow');
+        const buttonReload = document.querySelector('.refresh');
+        const buttonQuality = document.querySelector('.check');
+        const buttonInterface = document.querySelector('.togglebutton');
+        const controlsContainer = document.querySelector('.controls-container');
+        var camera = document.querySelector('a-entity[camera]').components.camera.camera;
+        function resize(){
+            const screenWidth = window.innerWidth;
+            const screenHeight = window.innerHeight;
+            var aspectratio = screenWidth / screenHeight;
+            camera.aspect = aspectratio;
+            camera.updateProjectionMatrix();
+        }
+        resize();
+        const resizeObserver = new ResizeObserver(resize);
+        resizeObserver.observe(document.querySelector('a-scene'), {box: 'content-box'});
+        async function fetchData(endpoint) {
+            const response = await fetch(server + endpoint, {mode: "no-cors"});
+            if (!response.ok) {
+                throw new Error(`Failed to fetch ${endpoint}`);
+            }
+            return response.json();
+        }
+        async function load3DModel(index) {
+            try {
+                const response = await fetch(server + `equipamentos/${index}/arquivos/modelo3d`, {mode: "no-cors"});
+                const modelData = await response.arrayBuffer();
+                const blob = new Blob([modelData]);
+                const url = URL.createObjectURL(blob);
+
+                modelEntity.setAttribute("gltf-model", url);
+                modelEntity.setAttribute("scale", "1.5 1.5 1.5");
+                modelEntity.setAttribute("position", "0 -0.4 0");
+                modelEntity.setAttribute("visible", true);
+
+                textEntity.setAttribute("visible", false);
+                imageEntity.setAttribute("visible", false);
+            } catch (error) {
+                console.error("Error loading 3D model:", error);
+            }
+        }
+
+        async function loadText(index) {
+            try {
+                const data = await fetchData(`equipamentos/${index}`);
+                textEntity.setAttribute("text", {
+                    value: data.Descricao,
+                    align: "center",
+                    color: "#129912",
+                    width: 2
+                });
+                textEntity.setAttribute("position", "0 0 0");
+                textEntity.setAttribute("visible", true);
+
+                modelEntity.setAttribute("visible", false);
+                imageEntity.setAttribute("visible", false);
+            } catch (error) {
+                console.error("Error loading text:", error);
+            }
+        }
+
+        async function loadImage(index) {
+            try {
+                const response = await fetch(server + `equipamentos/${index}/arquivos/imagem`);
+                const blob = await response.blob();
+                const url = URL.createObjectURL(blob);
+
+                imageEntity.setAttribute("material", {
+                    src: url,
+                    transparent: true,
+                    opacity: 1
+                });
+                imageEntity.setAttribute("geometry", {
+                    primitive: "plane",
+                    height: 1,
+                    width: 1
+                });
+                imageEntity.setAttribute("position", "0 0 0");
+                imageEntity.setAttribute("visible", true);
+
+                modelEntity.setAttribute("visible", false);
+                textEntity.setAttribute("visible", false);
+            } catch (error) {
+                console.error("Error loading image:", error);
+            }
+        }
+
+        async function captureFrame() {
+            return new Promise((resolve) => {
+                const video = document.querySelector("video");
+                const canvas = document.createElement("canvas");
+                video.pause();
+                const style = window.getComputedStyle(video),
+                width = parseFloat(style.getPropertyValue('width')),
+                height = parseFloat(style.getPropertyValue('height')),
+                top = parseFloat(style.getPropertyValue('top')),
+                left = parseFloat(style.getPropertyValue('left'));
+                const imgLeft = left * video.videoWidth / width
+                const imgTop = top * video.videoHeight / height
+                const drawLeft = imgLeft > 0 ? 0 : imgLeft
+                const drawTop = imgTop > 0 ? 0 : imgTop
+                const drawWidth = video.videoWidth
+                const drawHeight = video.videoHeight
+                canvas.width = video.videoWidth + imgLeft * 2
+                canvas.height = video.videoHeight + imgTop * 2
+                canvas.getContext('2d').drawImage(video, drawLeft, drawTop, drawWidth, drawHeight);
+                video.play();
+                resolve(canvas);
+            });
+        }
+        async function scanQRCode() {
+            try {
+                const img_screen = await captureFrame();
+                const blob = await new Promise(resolve => img_screen.toBlob(resolve));
+                const file = new File([blob], "qr-code-image.png");
+                const html5QrCode = new Html5Qrcode('qr-code-reader');
+                const qrCodeMessage = await html5QrCode.scanFile(file, false);
+                return qrCodeMessage;
+            } catch (error) {
+                console.error(`Error scanning QR code: ${error}`);
+                throw error;
+            }
+        }
+        function Targeted(){
+            if(!lockIndex){
+                scanQRCode().then((qrCodeMessage) => {
+                    backIndex = qrCodeMessage;
+                    currentMode = 0;
+                    opennavigationInterface();
+                    lockIndex = true;
+                    addnamefrombackend(backIndex);
+                    handleMarkerFound(backIndex);
+                })
+                .catch((error) => {
+                    console.error('Error scanning QR code:', error);
+                    if(target_visible){
+                        setTimeout(() => {
+                            Targeted();
+                        }, 200);
+                    }
+                });
+            }
+        };
+        document.querySelector('a-marker').addEventListener('markerFound', (e) => {
+            console.log("Hiro detected");
+            target_visible = 1;
+            Targeted();
+        });
+        document.querySelector('a-marker').addEventListener('markerLost', (e) => {
+            handleMarkerLost();
+        });
+        async function handleMarkerFound(index) {
+            if (currentMode === 0) {
+                await loadText(index);
+            } else if (currentMode === 1) {
+                await loadImage(index);
+            } else if (currentMode === 2) {
+                await load3DModel(index);
+            }
+        }
+
+        async function handleMarkerLost(){
+            target_visible = 0;
+        };
+        function opennavigationInterface(){
+            controlsContainer.style.display = 'flex';
+        };
+        function closenavigationInterface(){
+            controlsContainer.style.display = 'none';
+        };
+        function togglenavigationInterface(){
+            controlsContainer.style.display = controlsContainer.style.display === 'none' ? 'flex' : 'none';
+        };
+        function righthandler(){
+            if (currentMode<2){
+                currentMode = currentMode + 1;
+            }
+            else{
+                currentMode = 0;
+            }
+            if (backIndex !== null) {
+                handleMarkerFound(backIndex);
+            }
+        };
+        function lefthandler(){
+            if (currentMode>0){
+                currentMode = currentMode - 1;
+            }
+            else{
+                currentMode = 2;
+            }
+            if (backIndex !== null) {
+                handleMarkerFound(backIndex);
+            }
+        };
+        buttonRight.addEventListener('click', () => {
+            righthandler();
+        });
+        buttonLeft.addEventListener('click', () => {
+            lefthandler();
+        });
+        buttonReload.addEventListener('click', () => {
+            closenavigationInterface();
+            removenamefrombackend();
+            lockIndex = false;
+        });
+        buttonQuality.addEventListener('click', () => {
+        });
+        buttonInterface.addEventListener('click', () => {
+            togglenavigationInterface();
+        });
+        var frameCount = 0;
+        var lastTime = performance.now();
+        function updateFPSCounter() {
+            const currentTime = performance.now();
+            const deltaTime = currentTime - lastTime;
+            frameCount++;
+
+            if (deltaTime >= 1000) {
+                const fps = Math.round((frameCount * 1000) / deltaTime);
+                fpsCounter.innerHTML = `FPS: ${fps}`;
+                frameCount = 0;
+                lastTime = currentTime;
+            }
+
+            requestAnimationFrame(updateFPSCounter);
+        }
+        updateFPSCounter();
+        function targetName(name) {
+            objectName.innerHTML = name;
+        }
+        async function addnamefrombackend(index) {
+            try {
+                const response = await fetch(server + `equipamentos/${index}`);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch text from backend');
+                }
+                const text = await response.json();
+                targetName(text.Nome);
+            } catch (error) {
+                console.error('Error adding text from backend:', error);
+            }
+        }
+        function removenamefrombackend(){
+            targetName("");
+        };
+        buttonLeft.style.backgroundImage = 'url("../assets/images/left.png")';
+        buttonRight.style.backgroundImage = 'url("../assets/images/right.png")';        
+    </script>
+  </body>
+</html>
